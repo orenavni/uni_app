@@ -141,27 +141,6 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `uni_db`.`attendance`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `uni_db`.`attendance` (
-  `attendance_id` INT(11) NOT NULL,
-  `lesson_id` INT(11) NOT NULL,
-  `course_id` INT(11) NOT NULL,
-  `teacher_id` INT(11) NOT NULL,
-  `present` TINYINT(1) NULL DEFAULT NULL,
-  PRIMARY KEY (`attendance_id`),
-  INDEX `lesson_id_idx` (`lesson_id` ASC) VISIBLE,
-  CONSTRAINT `lesson_id`
-    FOREIGN KEY (`lesson_id`)
-    REFERENCES `uni_db`.`lesson` (`lesson_id`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
 -- Table `uni_db`.`students`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uni_db`.`students` (
@@ -184,6 +163,47 @@ CREATE TABLE IF NOT EXISTS `uni_db`.`students` (
   CONSTRAINT `user_id`
     FOREIGN KEY (`user_id`)
     REFERENCES `uni_db`.`user` (`user_id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `uni_db`.`attendance`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uni_db`.`attendance` (
+  `attendance_id` INT(11) NOT NULL,
+  `lesson_id` INT(11) NOT NULL,
+  `course_id` INT(11) NOT NULL,
+  `teacher_id` INT(11) NOT NULL,
+  `student_present` INT(11) NULL DEFAULT NULL,
+  `student_absent` INT(11) NULL DEFAULT NULL,
+  `student_late` INT(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`attendance_id`),
+  INDEX `lesson_id_idx` (`lesson_id` ASC) VISIBLE,
+  INDEX `student_present_idx` (`student_present` ASC) VISIBLE,
+  INDEX `student_absent_idx` (`student_absent` ASC) VISIBLE,
+  INDEX `student_late_idx` (`student_late` ASC) VISIBLE,
+  CONSTRAINT `lesson_id`
+    FOREIGN KEY (`lesson_id`)
+    REFERENCES `uni_db`.`lesson` (`lesson_id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `student_absent`
+    FOREIGN KEY (`student_absent`)
+    REFERENCES `uni_db`.`students` (`student_id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `student_late`
+    FOREIGN KEY (`student_late`)
+    REFERENCES `uni_db`.`students` (`student_id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `student_present`
+    FOREIGN KEY (`student_present`)
+    REFERENCES `uni_db`.`students` (`student_id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
 ENGINE = InnoDB
